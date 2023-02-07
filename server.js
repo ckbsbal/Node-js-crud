@@ -1,17 +1,45 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
+
+
 var app = express();
 
+
+const cors = require("cors")
+
+const corsOpts = {
+  origin: '*',
+
+  methods: [
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE'
+  ],
+
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization'
+  ],
+};
+app.use(cors(corsOpts));
+app.options('*', cors())
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse application/json
 app.use(bodyParser.json())
 
+app.set('view engine','ejs')
 
-
-
+ 
+app.get('/',function(req,res){
+    res.render('index',{
+        topicHead : 'data Form',
+    });
+    console.log('user accessing Home page');
+});
 
 app.post('/message',function(req,res){
 
