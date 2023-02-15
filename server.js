@@ -1,7 +1,23 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
+var mqtt = require('mqtt')
 
+    var options = {
+        host: 'bbf550b949034545af517b34983a136d.s1.eu.hivemq.cloud',
+        port: 8883,
+        protocol: 'mqtts',
+        username: 'Chandan',
+        password: 'Chandan@1234'
+    }
+    
+    // initialize the MQTT client
+    var client = mqtt.connect(options);
+    
+    // setup the callbacks
+    client.on('connect', function () {
+        console.log('Connected');
+    });
 
 var app = express();
 
@@ -42,15 +58,15 @@ app.get('/',function(req,res){
 });
 
 
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
+// const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
-app.post('/whatsapp', function(req, res, next) {
-  console.log("message==",req.body)
-  const twiml = new MessagingResponse();
-  twiml.message('This is a response from server');
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(twiml.toString());
-});
+// app.post('/whatsapp', function(req, res, next) {
+//   console.log("message==",req.body)
+//   const twiml = new MessagingResponse();
+//   twiml.message('This is a response from server');
+//   res.writeHead(200, {'Content-Type': 'text/xml'});
+//   res.end(twiml.toString());
+// });
 
 
 app.post('/message',function(req,res){
@@ -59,23 +75,7 @@ app.post('/message',function(req,res){
 
 
 
-    var mqtt = require('mqtt')
-
-    var options = {
-        host: 'bbf550b949034545af517b34983a136d.s1.eu.hivemq.cloud',
-        port: 8883,
-        protocol: 'mqtts',
-        username: 'Chandan',
-        password: 'Chandan@1234'
-    }
     
-    // initialize the MQTT client
-    var client = mqtt.connect(options);
-    
-    // setup the callbacks
-    client.on('connect', function () {
-        console.log('Connected');
-    });
     
     client.on('error', function (error) {
         console.log(error);
@@ -92,6 +92,24 @@ app.post('/message',function(req,res){
     // publish message 'Hello' to topic 'my/test/topic'
     client.publish(req.body.topic, req.body.message);
     res.send("done")
+});
+
+app.get('/send',function(req, res){
+
+
+    
+    client.on('error', function (error) {
+        console.log(error);
+    });
+    
+  
+    
+    // publish message 'Hello' to topic 'my/test/topic'
+    client.publish('loveBox',req.query.message);
+    res.send("done")
+
+
+   console.log(req.query.message)
 });
 
 
