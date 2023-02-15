@@ -41,6 +41,18 @@ app.get('/',function(req,res){
     console.log('user accessing Home page');
 });
 
+
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
+
+app.post('/whatsapp', function(req, res, next) {
+  console.log("message==",req.body)
+  const twiml = new MessagingResponse();
+  twiml.message('This is a response from server');
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(twiml.toString());
+});
+
+
 app.post('/message',function(req,res){
 
     console.log("data",req.body)
@@ -50,7 +62,7 @@ app.post('/message',function(req,res){
     var mqtt = require('mqtt')
 
     var options = {
-        host: 'f48ee08ab11a445eb674d5c74cbc9aa8.s2.eu.hivemq.cloud',
+        host: 'bbf550b949034545af517b34983a136d.s1.eu.hivemq.cloud',
         port: 8883,
         protocol: 'mqtts',
         username: 'Chandan',
@@ -75,7 +87,7 @@ app.post('/message',function(req,res){
     });
     
     // subscribe to topic 'my/test/topic'
-    client.subscribe('my/test/topic');
+    client.subscribe('loveBox');
     
     // publish message 'Hello' to topic 'my/test/topic'
     client.publish(req.body.topic, req.body.message);
